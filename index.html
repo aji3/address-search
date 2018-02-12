@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Address Search</title>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+  <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css"></link>
+  <link href="styles.css" rel="stylesheet" type="text/css">
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+        <v-content>
+          <v-container fluid>
+            <page></page>
+          </v-container>
+        </v-content>
+    </v-app>
+  </div>
+
+  <script type="text/x-template" id="page">
+    <v-layout row wrap>
+      <v-flex xs3>
+        <v-text-field
+        label="都道府県"
+        id="prefecture"
+        v-model="prefecture"
+        clearable
+        class="px-1"></v-text-field>
+      </v-flex>
+
+      <v-flex xs3>
+      <v-text-field
+      label="市区町村"
+      id="city"
+      ref="city"
+      clearable
+      class="px-1"></v-text-field>
+      </v-flex>
+
+      <v-flex xs6>
+      <v-text-field
+      label="詳細"
+      id="town"
+      clearable
+      class="px-1"></v-text-field>
+      </v-flex>
+
+      <v-flex xs4>
+        <div v-for="charList in charListList">
+          <v-btn v-for="char in charList" outline fab color="indigo" :key="char" @click="prefecture = prefecture ? prefecture + char : char">{{char}}</v-btn>
+        </div>
+      </v-flex>
+      <v-flex xs8>
+        <v-data-table
+          :items="prefectures"
+          class="elevation-1"
+          :rows-per-page-items="rowsPerPage"
+        >
+          <template slot="items" slot-scope="props">
+            <td><v-btn color="primary" @click="selectPrefecture(props.item)">選択</v-btn></td>
+            <td>{{ props.item.label }}</td>
+            <td>{{ props.item.key }}</td>
+          </template>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
+  </script>
+
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuetify/dist/vuetify.js"></script>
+  <script>
+    Vue.component('page', {
+      template: '#page',
+      data: function() {
+        return {
+          rowsPerPage: [12, { text: "All", value: 12 }],
+          prefecture: "",
+          charListList: [
+            ['ｱ','ｲ','ｳ','ｴ','ｵ'],
+            ['ｶ','ｷ','ｸ','ｹ','ｺ'],
+            ['ｻ','ｼ','ｽ','ｾ','ｿ'],
+            ['ﾀ','ﾁ','ﾂ','ﾃ','ﾄ'],
+            ['ﾅ','ﾆ','ﾇ','ﾈ','ﾉ'],
+            ['ﾊ','ﾋ','ﾌ','ﾍ','ﾎ'],
+            ['ﾏ','ﾐ','ﾑ','ﾒ','ﾓ'],
+            ['ﾔ','ﾕ','ﾖ'],
+            ['ﾗ','ﾘ','ﾙ','ﾚ','ﾛ'],
+            ['ﾜ','ｦ','ﾝ','ﾞ','ﾟ'],
+          ],
+          prefectureList:[
+            {label:'北海道', key:'ﾎﾂｶｲﾄﾞｳ'},{label:'青森県', key:'ｱｵﾓﾘ'},{label:'岩手県', key:'ｲﾜﾃ'},{label:'宮城県', key:'ﾐﾔｷﾞ'},{label:'秋田県', key:'ｱｷﾀ'},{label:'山形県', key:'ﾔﾏｶﾞﾀ'},{label:'福島県', key:'ﾌｸｼﾏ'},{label:'茨城県', key:'ｲﾊﾞﾗｷ'},{label:'栃木県', key:'ﾄﾁｷﾞ'},{label:'群馬県', key:'ｸﾞﾝﾏ'},{label:'埼玉県', key:'ｻｲﾀﾏ'},{label:'千葉県', key:'ﾁﾊﾞ'},{label:'東京都', key:'ﾄｳｷﾖｳ'},{label:'神奈川県', key:'ｶﾅｶﾞﾜ'},{label:'新潟県', key:'ﾆｲｶﾞﾀ'},{label:'富山県', key:'ﾄﾔﾏ'},{label:'石川県', key:'ｲｼｶﾜ'},{label:'福井県', key:'ﾌｸｲ'},{label:'山梨県', key:'ﾔﾏﾅｼ'},{label:'長野県', key:'ﾅｶﾞﾉ'},{label:'岐阜県', key:'ｷﾞﾌ'},{label:'静岡県', key:'ｼｽﾞｵｶ'},{label:'愛知県', key:'ｱｲﾁ'},{label:'三重県', key:'ﾐｴ'},{label:'滋賀県', key:'ｼｶﾞ'},{label:'京都府', key:'ｷｮｳﾄ'},{label:'大阪府', key:'ｵｵｻｶ'},{label:'兵庫県', key:'ﾋｮｳｺﾞ'},{label:'奈良県', key:'ﾅﾗ'},{label:'和歌山県', key:'ﾜｶﾔﾏ'},{label:'鳥取県', key:'ﾄﾂﾄﾘ'},{label:'島根県', key:'ｼﾏﾈ'},{label:'岡山県', key:'ｵｶﾔﾏ'},{label:'広島県', key:'ﾋﾛｼﾏ'},{label:'山口県', key:'ﾔﾏｸﾞﾁ'},{label:'徳島県', key:'ﾄｸｼﾏ'},{label:'香川県', key:'ｶｶﾞﾜ'},{label:'愛媛県', key:'ｴﾋﾒ'},{label:'高知県', key:'ｺｳﾁ'},{label:'福岡県', key:'ﾌｸｵｶ'},{label:'佐賀県', key:'ｻｶﾞ'},{label:'長崎県', key:'ﾅｶﾞｻｷ'},{label:'熊本県', key:'ｸﾏﾓﾄ'},{label:'大分県', key:'ｵｵｲﾀ'},{label:'宮崎県', key:'ﾐﾔｻﾞｷ'},{label:'鹿児島県', key:'ｶｺﾞｼﾏ'},{label:'沖縄県', key:'ｵｷﾅﾜ'}
+          ]
+        }
+      },
+      computed: {
+        prefectures: function() {
+          if (!this.prefecture) {
+            return this.prefectureList;
+          }
+          return this.prefectureList.filter(element => {
+            return element.key.startsWith(this.prefecture); 
+          });
+        }
+      },
+      methods: {
+        selectPrefecture: function(item) {
+          this.prefecture = item.key;
+          this.$refs.city.focus()
+        }
+      }
+    })
+    new Vue({
+      el: '#app',
+      data: {
+        clipped: false,
+        drawer: true,
+        fixed: false,
+        items: [
+          { icon: 'bubble_chart', title: 'Inspire' }
+        ],
+        miniVariant: false,
+        right: true,
+        rightDrawer: false,
+        title: 'Vuetify.js'
+      }
+    })
+  </script>
+</body>
+
+</html>
